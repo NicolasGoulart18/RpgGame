@@ -28,8 +28,13 @@ public class Personagem {
         return vida;
     }
 
-    public void receberDano(int dano){
+    public void receberDano(int dano,boolean defendendo){
         int danoReal=Math.max(0,dano-this.defesa);
+
+        if(defendendo){
+            danoReal=(danoReal+1)/2;
+        }
+
         this.vida=Math.max(0,this.vida- danoReal);
     }
 
@@ -43,6 +48,8 @@ public class Personagem {
             this.vida+quantidade
              );
     }
+
+
 
     public boolean estaVivo(){
         if(this.vida>0){

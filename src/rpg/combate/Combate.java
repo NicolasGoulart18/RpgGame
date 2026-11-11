@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Combate {
     private Personagem heroi;
     private Personagem inimigo;
-
+    private int especiaisRestantes = 3;
     public Combate(Personagem heroi, Personagem inimigo) {
         this.heroi = heroi;
         this.inimigo = inimigo;
@@ -19,7 +19,8 @@ public class Combate {
             System.out.println(heroi.getNome() + ": " + heroi.getVida() + "/" + heroi.getVidaMaxima() + " HP");
             System.out.println(inimigo.getNome() + ": " + inimigo.getVida() + "/" + inimigo.getVidaMaxima() + " HP");
             System.out.println("1 - Ataque comum");
-            System.out.println("2 - Ataque especial");
+            System.out.println( "2 - Ataque especial (" + especiaisRestantes + " restantes)");
+            System.out.println("3 - Defender");
             System.out.print("Sua escolha: ");
 
             if (!teclado.hasNext()) {
@@ -44,7 +45,8 @@ public class Combate {
     }
 
     public void executarRodada(int opcao) {
-        int dano;
+        int dano = 0;
+        boolean defendendo=false;
 
         switch (opcao) {
             case 1:
@@ -52,20 +54,32 @@ public class Combate {
                 System.out.println(heroi.getNome() + " usou ataque comum!");
                 break;
             case 2:
-                dano = heroi.ataqueEspecial();
+                 if (especiaisRestantes <= 0) {
+                System.out.println("Voce nao possui especiais restantes!");
+                return;
+                
+    }
+             dano = heroi.ataqueEspecial();
+            especiaisRestantes--;
+
                 System.out.println(heroi.getNome() + " usou ataque especial!");
                 break;
+                
+            
+            case 3:
+                defendendo=true;  
+                System.out.println(heroi.getNome()+" adotou uma postura defensiva!");
+                break;
+
             default:
-                System.out.println("Opcao invalida! Escolha 1 ou 2.");
+                System.out.println("Opção inválida! Escolha 1 2 ou 3");
                 return;
         }
 
-        inimigo.receberDano(dano);
-        System.out.println("Vida do inimigo: " + inimigo.getVida());
 
         if (inimigo.estaVivo()) {
             System.out.println(inimigo.getNome() + " revida!");
-            heroi.receberDano(inimigo.atacar());
+            heroi.receberDano(inimigo.atacar(),defendendo);
         }
 
         System.out.println("Vida do heroi: " + heroi.getVida());
