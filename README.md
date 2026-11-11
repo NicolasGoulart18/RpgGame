@@ -8,11 +8,11 @@ Projeto de RPG em Java desenvolvido para a disciplina de Paradigmas de Programa�
 
 O jogador seleciona **Guerreiro, Mago ou Arqueiro**, escolhe o nome do personagem e enfrenta **Goblin**, **Esqueleto Guerreiro** e **Dragão Ancião (chefão)**. Vida e inventário são preservados entre as fases.
 
-![Inicio do RPG e primeiro combate](docs/screenshots/inicio.png)
+![Inicio do RPG e primeiro combate](docs/screenshots/inicio.svg)
 
-![Derrota do chefe e final da aventura](docs/screenshots/vitoria.png)
+![Derrota do chefe e final da aventura](docs/screenshots/vitoria.svg)
 
-> As imagens mostram saídas de uma execução real do programa Java, renderizadas em um quadro de terminal para facilitar a leitura. Veja também os testes e o código-fonte.
+> Os registros visuais foram renderizados a partir de saídas de uma execução real do jogo em Java; são reproduções do texto do terminal, não fotografias do VS Code.
 
 ## Requisitos e execução
 
