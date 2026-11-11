@@ -4,7 +4,7 @@ public class Guerreiro extends Personagem {
     }
 
     @Override //sobrescrevendo um metodo da classe pai
-    public int atacar(){
+    public int ataqueEspecial(){
         return super.atacar()+10;
     }
 

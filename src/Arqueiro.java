@@ -4,7 +4,7 @@ public class Arqueiro extends Personagem {
     }
 
     @Override
-    public int atacar(){
+    public int ataqueEspecial(){
         return super.atacar()+15;
     }
 }

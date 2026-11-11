@@ -17,6 +17,11 @@ public class Personagem {
         return this.ataque;
     }
 
+    public int ataqueEspecial(){
+        return this.ataque;
+    }
+
+
     public int getVida() {
         return vida;
     }
