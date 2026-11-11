@@ -13,6 +13,10 @@ public class Personagem {
         this.defesa=defesa;
     }
 
+    public int atacar(){
+        return this.ataque;
+    }
+
     public int getVida() {
         return vida;
     }
