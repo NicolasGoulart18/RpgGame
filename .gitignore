@@ -1,11 +1,8 @@
-# Arquivos compilados do Java
 *.class
 out/
 bin/
-target/
 build/
-
-# Arquivos temporarios e de IDE
+target/
 .idea/
 *.iml
 .settings/
@@ -13,6 +10,3 @@ build/
 .project
 .DS_Store
 Thumbs.db
-
-# Configuracoes locais de editor (arquivo ja versionado permanece ate remocao explicita)
-.vscode/

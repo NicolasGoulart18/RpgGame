@@ -1,72 +1,52 @@
 package rpg.personagens;
 
-public class Personagem {
-    private String nome;
+/** Regras de vida, ataque e defesa compartilhadas por todos os combatentes. */
+public abstract class Personagem {
+    private final String nome;
+    private final int vidaMaxima;
+    private final int ataque;
     private int vida;
-    private int vidaMaxima;
-    private  int ataque;
     private int defesa;
 
-    public Personagem(String nome,int vida,int ataque,int defesa){
-        this.nome=nome;
-        this.vida=vida;
-        this.vidaMaxima=vida;
-        this.ataque=ataque;
-        this.defesa=defesa;
-    }
-
-    public int atacar(){
-        return this.ataque;
-    }
-
-    public int ataqueEspecial(){
-        return this.ataque;
-    }
-
-
-    public int getVida() {
-        return vida;
-    }
-
-    public void receberDano(int dano,boolean defendendo){
-        int danoReal=Math.max(0,dano-this.defesa);
-
-        if(defendendo){
-            danoReal=(danoReal+1)/2;
+    protected Personagem(String nome, int vidaMaxima, int ataque, int defesa) {
+        if (nome == null || nome.isBlank() || vidaMaxima <= 0 || ataque < 0 || defesa < 0) {
+            throw new IllegalArgumentException("Atributos de personagem invalidos");
         }
-
-        this.vida=Math.max(0,this.vida- danoReal);
+        this.nome = nome;
+        this.vidaMaxima = vidaMaxima;
+        this.vida = vidaMaxima;
+        this.ataque = ataque;
+        this.defesa = defesa;
     }
 
-    public void curar(int quantidade){
-        if (quantidade<=0) {
-            return;
+    public String getNome() { return nome; }
+    public int getVida() { return vida; }
+    public int getVidaMaxima() { return vidaMaxima; }
+    public int getDefesa() { return defesa; }
+    public int atacar() { return ataque; }
+    public boolean estaVivo() { return vida > 0; }
+
+    /** Retorna o dano efetivamente sofrido, sem deixar a vida negativa. */
+    public int receberDano(int dano, boolean defendendo) {
+        int danoReal = Math.max(0, dano - defesa);
+        if (defendendo) {
+            danoReal = (danoReal + 1) / 2;
         }
-        
-        this.vida=Math.min(
-            this.vidaMaxima,
-            this.vida+quantidade
-             );
+        int vidaAnterior = vida;
+        vida = Math.max(0, vida - danoReal);
+        return vidaAnterior - vida;
     }
 
-
-
-    public boolean estaVivo(){
-        if(this.vida>0){
-            return true;
-        }else{
-            return false;
-        }
+    /** Retorna a quantidade de pontos de vida efetivamente recuperada. */
+    public int curar(int quantidade) {
+        if (quantidade <= 0 || !estaVivo()) return 0;
+        int vidaAnterior = vida;
+        vida = (int) Math.min((long) vidaMaxima, (long) vida + quantidade);
+        return vida - vidaAnterior;
     }
 
-    public String getNome() {
-        return this.nome;
+    public void aumentarDefesa(int bonus) {
+        if (bonus <= 0) throw new IllegalArgumentException("Bonus deve ser positivo");
+        defesa += bonus;
     }
-
-    public int getVidaMaxima() {
-        return this.vidaMaxima;
-    }
-    
-
-    
 }
