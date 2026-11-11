@@ -77,9 +77,15 @@ public class Combate {
         }
 
 
-        if (inimigo.estaVivo()) {
-            System.out.println(inimigo.getNome() + " revida!");
-            heroi.receberDano(inimigo.atacar(),defendendo);
+        if (!defendendo) {
+            inimigo.receberDano(dano, defendendo);
+            System.out.println(
+                "Vida do inimigo: "+inimigo.getVida()
+            );
+        }
+        if(inimigo.estaVivo()){
+            System.out.println(inimigo.getNome()+" revida!");
+            heroi.receberDano(dano, defendendo);
         }
 
         System.out.println("Vida do heroi: " + heroi.getVida());
