@@ -1,18 +1,33 @@
 class Personagem{
+
+    #vida;
+    #vidaMaxima;
     constructor(nome,vida,ataque,defesa){
         this.nome=nome;
-        this.vida=vida;
+        this.#vida=vida;
+        this.#vidaMaxima=vida;
         this.ataque=ataque;
         this.defesa=defesa;
     }
 
+    getVida(){
+        return this.#vida;
+    }
+
     receberDano(dano){
     const danoReal=Math.max(0,dano - this.defesa)
-    this.vida=Math.max(0, this.vida - danoReal);
+    this.#vida=Math.max(0, this.#vida - danoReal);
 }
 
+    curar(quantidade){
+        this.#vida = Math.min(
+            this.#vidaMaxima,
+            this.#vida + quantidade
+        );
+    }
+
     estaVivo(){
-        if (this.vida>0){
+        if (this.#vida>0){
             return true;
         }else{
             return false;
@@ -24,11 +39,9 @@ class Personagem{
 }
 
 
-const heroi= new Personagem("Arthur",100,25,10)
-heroi.receberDano(80);
-console.log(heroi,heroi.estaVivo());
+const arthur= new Personagem("Arthur",100,25,10)
+arthur.receberDano(80);
+console.log("Após dano: ",arthur.getVida());
+arthur.curar(40);
+console.log("Após cura: ",arthur.getVida());
 
-const guerreiro = new Personagem("Shawnzo",130,40,5)
-guerreiro.receberDano(30);
-guerreiro.receberDano(50);
-console.log(guerreiro,guerreiro.estaVivo());
