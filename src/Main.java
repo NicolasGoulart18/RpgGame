@@ -4,6 +4,6 @@ public class Main {
     Personagem inimigo = new Goblin("Goblin");
 
     Combate combate = new Combate(heroi, inimigo);
-    combate.executarRodada();
+        combate.iniciarCombate();
     }
 }

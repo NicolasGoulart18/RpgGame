@@ -6,6 +6,18 @@ public class Combate {
         this.inimigo=inimigo;
     }
 
+   
+    public void iniciarCombate(){
+        while (heroi.estaVivo()&&inimigo.estaVivo()) {   
+            executarRodada();    
+        }
+        if (heroi.estaVivo()) {
+            System.out.println("Heroi venceu!");
+        }else{
+            System.out.println("Heroi foi derrotado!");
+        }
+    }
+
     public void executarRodada(){
         System.out.println("Ataque do heroi "+heroi.getNome());
         inimigo.receberDano(heroi.atacar());
@@ -16,8 +28,6 @@ public class Combate {
         if (inimigo.estaVivo()) {
             System.out.println(inimigo.getNome()+" revida!");
             heroi.receberDano(inimigo.atacar());   
-        }else{
-            System.out.println("Herói venceu!");
         }
         System.out.println("Vida do Heroi: "+heroi.getVida());
     }
