@@ -1,3 +1,10 @@
+package rpg;
+
+import rpg.combate.Combate;
+import rpg.inimigos.Goblin;
+import rpg.personagens.Guerreiro;
+import rpg.personagens.Personagem;
+
 import java.util.Scanner;
 
 public class Main {

@@ -1,3 +1,5 @@
+package rpg.personagens;
+
 public class Arqueiro extends Personagem {
     public Arqueiro(String nome){
         super(nome,90,35,10);

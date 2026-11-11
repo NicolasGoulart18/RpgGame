@@ -1,3 +1,7 @@
+package rpg.combate;
+
+import rpg.personagens.Personagem;
+
 import java.util.Scanner;
 
 public class Combate {

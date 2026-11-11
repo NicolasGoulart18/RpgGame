@@ -1,3 +1,5 @@
+package rpg.personagens;
+
 public class Mago extends Personagem{
     public Mago(String nome){
         super(nome,70,40,5);

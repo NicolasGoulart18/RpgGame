@@ -1,3 +1,5 @@
+package rpg.personagens;
+
 public class Personagem {
     private String nome;
     private int vida;
