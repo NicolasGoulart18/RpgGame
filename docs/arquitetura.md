@@ -1,44 +1,52 @@
-# Arquitetura do RPG
+# Arquitetura e decisões técnicas
 
-Este documento descreve **o estado atual**, sem confundir funcionalidades planejadas com implementadas.
+## Fluxo de execução
 
-## Organização
+1. **Main** inicia ConsoleUI com Scanner e cria Jogo.
+2. **Jogo** seleciona o Heroi, prepara o Inventario e apresenta três fases.
+3. **Combate** recebe Heroi, Inimigo, Inventario e InterfaceUsuario; executa rodadas e retorna ResultadoCombate.
+4. **Personagem** protege estado, aplica ataque, defesa e cura.
+5. **Inventario** guarda itens através das interfaces Usavel e Equipavel.
 
-- `rpg.Main`: ponto de entrada; cria os objetos iniciais e o `Scanner`.
-- `rpg.personagens.Personagem`: armazena os atributos comuns e implementa as regras de vida, defesa e cura.
-- `rpg.personagens.Guerreiro`, `Mago` e `Arqueiro`: herdam de `Personagem` e sobrescrevem `ataqueEspecial()`.
-- `rpg.inimigos.Goblin`: herda de `Personagem`; usa o ataque comum.
-- `rpg.combate.Combate`: recebe duas referências de `Personagem`, realiza as rodadas e atualmente também lê/escreve no console.
+## Regras verificáveis
 
-## Regras implementadas
+- A vida começa no máximo. Dano nunca deixa a vida negativa; cura nunca ultrapassa a vida máxima.
+- Dano normal: **max(0, ataque - defesa)**.
+- Se defender: **(danoNormal + 1) / 2**, com divisão inteira; logo 5 vira 3.
+- Ataques comuns/especiais causam dano; defender, usar poção e equipar escudo não atacam.
+- O adversário revida após ação válida se continuar vivo.
+- Cada objeto Combate libera até três especiais. Um novo combate reinicia essa quantidade.
+- Poção cura até 30 HP e só é consumida se recuperar vida. Escudo adiciona +3 à defesa, uma única vez por exemplar.
+- O jogador enfrenta Goblin (fase 1), Esqueleto Guerreiro (fase 2) e Dragão Ancião (fase 3). Vida/itens persistem; uma poção é concedida após cada uma das duas primeiras vitórias.
 
-1. O dano efetivo é `Math.max(0, dano - defesa)`.
-2. A vida não fica abaixo de zero depois de sofrer dano.
-3. A cura positiva não ultrapassa a vida máxima; valores de cura não positivos são ignorados.
-4. O inimigo só revida caso sobreviva ao ataque.
-5. A batalha termina quando um dos combatentes é derrotado.
-6. Opção 1 aplica `atacar()`; opção 2 aplica `ataqueEspecial()`. Escolhas inválidas não realizam ataques.
+## SOLID aplicado
 
-## Avaliação dos princípios SOLID
+### S — SRP
 
-| Princípio | Estado atual | Evidência / trabalho pendente |
-| --- | --- | --- |
-| **S — SRP** | Parcial | `Personagem` concentra atributos e regras do personagem, e `Main` inicializa o jogo. `Combate` ainda mistura regras com entrada e saída pelo terminal; separar essas responsabilidades. |
-| **O — OCP** | Parcial | É possível adicionar subclasses com diferentes `ataqueEspecial()` sem alterar o cálculo base; o sistema ainda precisa ser avaliado ao adicionar novos comportamentos. |
-| **L — LSP** | Parcial | O combate opera com `Personagem` e aceita subclasses. É necessário revisar contratos e pré-condições, especialmente o método `ataqueEspecial()` herdado por inimigos. |
-| **I — ISP** | Pendente | Ainda não existem interfaces específicas para comportamentos opcionais, como usar itens ou executar habilidades especiais. |
-| **D — DIP** | Pendente | A lógica de `Combate` ainda depende diretamente do `Scanner` e de `System.out`; planeja-se abstrair a interação com o console. |
+**Personagem** altera atributos e mantém invariantes de vida/dano; **Inventario** controla a coleção de itens; **Combate** contém o algoritmo dos turnos; **Jogo** orquestra fases; **ConsoleUI** gerencia Scanner e saída. Nenhuma classe isolada precisa assumir todas essas responsabilidades.
 
-## Decisões tomadas
+### O — OCP
 
-- **Java em console:** corresponde ao formato do trabalho. O projeto começou em JavaScript, mas migrou para Java.
-- **Pacotes pequenos:** separar personagens, inimigos e combate sem introduzir camadas desnecessárias.
-- **Sem bibliotecas externas:** facilita compilar e apresentar na faculdade.
-- **Documentação honesta:** o diagrama representa o código existente, e não classes futuras.
+O método de Combate recebe um Heroi e um Inimigo por seus tipos-base, de forma que uma nova subclasse de Inimigo pode participar das mesmas rodadas. Inventario é independente da classe concreta dos objetos que implementam Usavel e Equipavel. O menu de seleção precisará de atualização para expor uma nova classe de herói, mas **as regras de combate** não precisam ser reescritas.
 
-## Melhorias planejadas
+### L — LSP
 
-- Separar interação com o terminal e lógica de combate para reforçar SRP e DIP.
-- Definir interfaces para comportamentos opcionais (ISP) e revisar contratos (LSP).
-- Adicionar inventário, poções, defesa, limitação de especiais, outros inimigos e chefão.
-- Criar testes e capturas de tela reais para o README.
+Guerreiro, Mago e Arqueiro mantêm as regras de Personagem e cumprem o contrato HabilidadeEspecial. Goblin, Esqueleto e Dragao mantêm o contrato Inimigo/Personagem. Todos suportam receberDano, curar, atacar e estaVivo sem lançar exceções para métodos não suportados. A suíte faz combinações entre subclasses.
+
+### I — ISP
+
+HabilidadeEspecial é implementada somente por Heroi, não por inimigos. Usavel e Equipavel são contratos independentes: PocaoCura não implementa equipar, EscudoReforcado não implementa usar. Isso evita métodos artificiais ou UnsupportedOperationException.
+
+### D — DIP
+
+Em vez de ler Scanner diretamente, o motor recebe a interface InterfaceUsuario com os métodos mostrar e perguntar. Main fornece ConsoleUI para uso real; TestesRpg injeta uma UIEmMemoria, permitindo testar regras sem terminal nem entrada manual.
+
+## Modelo de domínio
+
+- **Abstração:** Personagem, Heroi e Inimigo abstratos.
+- **Herança e polimorfismo:** classes concretas de heróis e inimigos.
+- **Encapsulamento:** nome, vida, ataque e defesa controlados por métodos.
+- **Composição/agregação:** Combate recebe seus colaboradores; Inventario mantém listas de Usavel e Equipavel.
+- **Sem dependências de terceiros:** apenas JDK; código compatível com Java 17+.
+
+Veja [diagrama de classes UML](diagrama-classes.md), [README e execução](../README.md) e [testes de regressão](../tests/rpg/TestesRpg.java).
