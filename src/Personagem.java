@@ -32,6 +32,10 @@ public class Personagem {
     }
 
     public void curar(int quantidade){
+        if (quantidade<=0) {
+            return;
+        }
+        
         this.vida=Math.min(
             this.vidaMaxima,
             this.vida+quantidade
@@ -45,4 +49,15 @@ public class Personagem {
             return false;
         }
     }
+
+    public String getNome() {
+        return this.nome;
+    }
+
+    public int getVidaMaxima() {
+        return this.vidaMaxima;
+    }
+    
+
+    
 }
