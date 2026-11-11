@@ -33,7 +33,7 @@ public class Personagem {
              );
     }
 
-    boolean estaVivo(){
+    public boolean estaVivo(){
         if(this.vida>0){
             return true;
         }else{
