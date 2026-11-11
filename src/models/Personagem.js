@@ -6,8 +6,7 @@ class Personagem{
         this.defesa=defesa;
     }
 
-    receberDano(){
-    this.vida -= dano;
+    receberDano(dano){
     this.vida=Math.max(0,this.vida - dano);
 }
 
@@ -17,5 +16,10 @@ class Personagem{
 
 
 const heroi= new Personagem("Arthur",100,25,10)
-heroi.receberDano(20);
+heroi.receberDano(120);
 console.log(heroi);
+
+const guerreiro = new Personagem("Shawnzo",130,40,5)
+guerreiro.receberDano(30);
+guerreiro.receberDano(50);
+console.log(guerreiro);
